@@ -48,7 +48,9 @@
 					alert("조회결과");
 					
 					alert("메세지:"+data.success);
-					console.log("boardVo : " + data.boardVoList[1].boardNum);
+					for(var i=0; i<boardList.length; i++){
+						console.log("boardVo : " + boardList[i].boardNum);
+					}
 					console.log("boardTypeSet : " + data.boardTypeSet);
 					
 										
