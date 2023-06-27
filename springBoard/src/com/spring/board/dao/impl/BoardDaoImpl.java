@@ -1,6 +1,7 @@
 package com.spring.board.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,16 @@ public class BoardDaoImpl implements BoardDao{
 		return sqlSession.delete("board.boardDelete", boardVo);
 	}
 	
+	@Override
+	public List<BoardVo> boardSelectList(Map<String, Object> boardTypeMap) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.searchList", boardTypeMap);
+	}
+	
+	@Override
+	public int selectBoardCnt(Map<String, Object> boardTypeMap) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.boardSelectCnt", boardTypeMap);
+	}
 	
 }

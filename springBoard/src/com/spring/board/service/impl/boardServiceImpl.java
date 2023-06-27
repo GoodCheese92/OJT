@@ -1,6 +1,7 @@
 package com.spring.board.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,4 +65,15 @@ public class boardServiceImpl implements boardService{
 		return boardDao.boardDelete(boardVo);
 	}
 	
+	@Override
+	public List<BoardVo> boardSelectList(Map<String, Object> boardTypeMap) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDao.boardSelectList(boardTypeMap);
+	}
+	
+	@Override
+	public int selectBoardCnt(Map<String, Object> boardTypeMap) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDao.selectBoardCnt(boardTypeMap);
+	}
 }

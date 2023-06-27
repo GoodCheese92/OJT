@@ -63,10 +63,10 @@
         ,MODIFIED_TIME
         )
         VALUES
-        ('1'
+        (#{boardType}
         ,(SELECT NVL(TO_NUMBER(MAX(BOARD_NUM)+1), '1')
 	    FROM BOARD
-	    WHERE BOARD_TYPE = '1')
+	    WHERE BOARD_TYPE = #{boardType})
         ,#{boardTitle}
         ,#{boardComment}
         ,'SYSTEM'
@@ -91,5 +91,45 @@
     	WHERE BOARD_TYPE = #{boardType} AND
     	BOARD_NUM = #{boardNum}
     </delete>
+    
+    <select id="searchList" parameterType="java.util.Map" resultMap="boardVo">
+    	SELECT 
+		  BOARD_TYPE
+		  ,BOARD_NUM
+		  ,BOARD_TITLE
+		  ,BOARD_COMMENT
+		  ,TOTAL_CNT
+		FROM 
+		(
+		  SELECT
+		      	BOARD_TYPE
+				,BOARD_NUM
+				,BOARD_TITLE
+				,BOARD_COMMENT
+		      	,ROW_NUMBER() OVER(ORDER BY BOARD_NUM DESC) AS NUMROW
+		      	,COUNT(*) OVER() AS TOTAL_CNT
+			FROM
+				BOARD
+			WHERE
+				BOARD_TYPE IN
+			<foreach collection="boardType" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>	
+		)
+		WHERE NUMROW BETWEEN (#{pageVo.pageNo}-1)*10 + 1 AND (#{pageVo.pageNo})*10
+		 
+    </select>
+    
+    <select id="boardSelectCnt" parameterType="java.util.Map" resultType="Integer">
+    	SELECT
+		      	COUNT(*) AS TOTAL_CNT
+			FROM
+				BOARD
+			WHERE
+				BOARD_TYPE IN
+				<foreach collection="boardType" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+    </select>
     
 </mapper>

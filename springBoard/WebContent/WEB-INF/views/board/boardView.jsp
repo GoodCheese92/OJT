@@ -21,12 +21,12 @@
 			}
 			
 			$j.ajax({
-				url : "board/boardDeleteAction.do",
+				url : "/board/boardDeleteAction.do",
 				dataType : "json",
-				type : "post",
+				type : "POST",
 				data : param,
 				success : function(data, textStatus, jqXHR){
-					alert("작성완료");
+					alert("삭제완료");
 					
 					alert("메세지 : " + data.success);
 					
