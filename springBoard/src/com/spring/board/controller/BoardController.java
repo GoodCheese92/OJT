@@ -38,7 +38,7 @@ public class BoardController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping(value = "/board/boardList.do", method = RequestMethod.GET)
-	public String boardList(Locale locale, Model model,PageVo pageVo) throws Exception{
+	public String boardList(Locale locale, Model model,PageVo pageVo, String boardTypeSet) throws Exception{
 		
 		List<BoardVo> boardList = new ArrayList<BoardVo>();
 		
@@ -49,8 +49,21 @@ public class BoardController {
 			pageVo.setPageNo(page);;
 		}
 		
-		boardList = boardService.SelectBoardList(pageVo);
-		totalCnt = boardService.selectBoardCnt();
+		if(boardTypeSet == null) {
+			boardList = boardService.SelectBoardList(pageVo);
+			totalCnt = boardService.selectBoardCnt();
+		} else {
+			Map<String, Object> boardTypeMap = new HashMap<String, Object>();
+			
+			String[] boardTypeArr = boardTypeSet.split(",");
+			
+			boardTypeMap.put("pageVo", pageVo);
+			boardTypeMap.put("boardType", boardTypeArr);
+			
+			boardList = boardService.boardSelectList(boardTypeMap);;
+			//totalCnt = boardVoList.size();
+			totalCnt = boardService.selectBoardCnt(boardTypeMap);
+		}
 		
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("totalCnt", totalCnt);
@@ -199,6 +212,7 @@ public class BoardController {
 		
 		result.put("success", "Y");
 		result.put("boardVoList", boardVoList);
+		model.addAttribute("boardList", boardVoList);
 		result.put("boardTypeSet", boardTypeSet);
 		
 		String callbackMsg = CommonUtil.getJsonCallBackString(" ", result);
@@ -206,46 +220,40 @@ public class BoardController {
 		return callbackMsg;
 	} // end of boardSearchAction()
 	
-	@RequestMapping(value = "/board/boardSearchList.do", method = RequestMethod.GET)
-	public String boardSearchList(Locale locale, Model model,PageVo pageVo, @RequestParam(value = "boardTypeSet")String boardTypeSet) throws Exception{
-		
-		System.out.println("----- boardSearchList.do -----");
-		System.out.println("boardTypeSet : " + boardTypeSet);
-		
-		String[] boardTypeArr = boardTypeSet.split(",");
-		
-		for(String s : boardTypeArr) {
-			System.out.println("boardTypeArr : " + s);
-		}
-		
-		Map<String, Object> boardTypeMap = new HashMap<String, Object>();
-		
-		int page = 1;
-		int totalCnt = 0;
-		
-		if(pageVo.getPageNo() == 0){
-			pageVo.setPageNo(page);
-		}
-		
-		boardTypeMap.put("pageVo", pageVo);
-		boardTypeMap.put("boardType", boardTypeArr);
-		
-		List<BoardVo> boardList = new ArrayList<BoardVo>();
-		
-		boardList = boardService.boardSelectList(boardTypeMap);;
-		//totalCnt = boardVoList.size();
-		totalCnt = boardService.selectBoardCnt(boardTypeMap);
-		
-		System.out.println("boardSelectCnt : " + totalCnt);
-		
-		
-		
-		model.addAttribute("boardList", boardList);
-		model.addAttribute("totalCnt", totalCnt);
-		model.addAttribute("pageNo", page);
-		
-		return "board/boardList";
-	}
+	/*
+	 * @RequestMapping(value = "/board/boardSearchList.do", method =
+	 * RequestMethod.GET) public String boardSearchList(Locale locale, Model
+	 * model,PageVo pageVo, @RequestParam(value = "boardTypeSet")String
+	 * boardTypeSet) throws Exception{
+	 * 
+	 * System.out.println("----- boardSearchList.do -----");
+	 * System.out.println("boardTypeSet : " + boardTypeSet);
+	 * 
+	 * String[] boardTypeArr = boardTypeSet.split(",");
+	 * 
+	 * for(String s : boardTypeArr) { System.out.println("boardTypeArr : " + s); }
+	 * 
+	 * Map<String, Object> boardTypeMap = new HashMap<String, Object>();
+	 * 
+	 * int page = 1; int totalCnt = 0;
+	 * 
+	 * if(pageVo.getPageNo() == 0){ pageVo.setPageNo(page); }
+	 * 
+	 * boardTypeMap.put("pageVo", pageVo); boardTypeMap.put("boardType",
+	 * boardTypeArr);
+	 * 
+	 * List<BoardVo> boardList = new ArrayList<BoardVo>();
+	 * 
+	 * boardList = boardService.boardSelectList(boardTypeMap);; //totalCnt =
+	 * boardVoList.size(); totalCnt = boardService.selectBoardCnt(boardTypeMap);
+	 * 
+	 * System.out.println("boardSelectCnt : " + totalCnt);
+	 * 
+	 * model.addAttribute("boardList", boardList); model.addAttribute("totalCnt",
+	 * totalCnt); model.addAttribute("pageNo", page);
+	 * 
+	 * return "board/boardList"; }
+	 */
 	
 } // end of class
 

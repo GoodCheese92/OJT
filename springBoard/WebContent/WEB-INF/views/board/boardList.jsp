@@ -43,13 +43,17 @@
 				dataType : "json",
 				type : "get",
 				success : function(data, textStatus, jqXHR){
+					var boardList = data.boardVoList;
+					
 					alert("조회결과");
 					
 					alert("메세지:"+data.success);
-					console.log("boardVo : " + data.boardVoList);
+					console.log("boardVo : " + data.boardVoList[1].boardNum);
 					console.log("boardTypeSet : " + data.boardTypeSet);
 					
-					location.href = "/board/boardSearchList.do?boardTypeSet=" + data.boardTypeSet;
+										
+					
+					// location.href = "/board/boardList.do?boardTypeSet=" + data.boardTypeSet;
 					
 					// alert("확인");
 				},
