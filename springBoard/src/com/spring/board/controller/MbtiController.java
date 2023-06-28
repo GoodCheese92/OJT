@@ -39,7 +39,7 @@ public class MbtiController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping(value = "/mbti/mbtiList.do", method = RequestMethod.GET)
-	public String boardList(Locale locale, Model model,PageVo pageVo) throws Exception{
+	public String mbtiList(Locale locale, Model model,PageVo pageVo) throws Exception{
 		
 		List<MbtiVo> mbtiList = new ArrayList<MbtiVo>();
 		
@@ -63,7 +63,35 @@ public class MbtiController {
 		model.addAttribute("pageNo", page);
 		
 		return "mbti/mbtiList";
-	}
+	} // end of mbtiList()
+	
+	@RequestMapping(value = "/mbti/mbtiPageAction.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String mbtiPageAction(PageVo pageVo) throws Exception{
+		System.out.println("----- mbtiPageAction -----");
+		System.out.println("pageNo : " + pageVo.getPageNo());
+		int page = 1;
+		int totalCnt = 0;
+		
+		if(pageVo.getPageNo() == 0){
+			pageVo.setPageNo(page);;
+		}
+		
+		List<MbtiVo> mbtiList = new ArrayList<MbtiVo>();
+		mbtiList = mbtiService.selectMbtiList(pageVo);
+		
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		CommonUtil commonUtil = new CommonUtil();
+		
+		result.put("success", (mbtiList != null)?"Y":"N");
+		result.put("mbtiList", mbtiList);
+		String callbackMsg = commonUtil.getJsonCallBackString(" ",result);
+		
+		System.out.println("callbackMsg : "+callbackMsg);
+		
+		return callbackMsg;
+		
+	} // end of class;
 	
 	
 	
