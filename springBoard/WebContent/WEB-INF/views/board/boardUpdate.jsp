@@ -26,7 +26,7 @@
 					
 					alert("¸Þ¼¼Áö:"+data.success);
 					
-					location.href = "/board/" + ${board.boardType}+ "/" + ${board.boardNum} + "/boardView.do";
+					location.href = '/board/${board.boardType}/${board.boardNum}/boardView.do';
 					// location.href = "/board/boardList.do?pageNo=";
 			    },
 			    error: function (jqXHR, textStatus, errorThrown)

@@ -3,6 +3,7 @@ package com.spring.board.vo;
 public class BoardVo {
 	
 	private String 	boardType;
+	private String boardTypeName;
 	private int 	boardNum;
 	private String 	boardTitle;
 	private String 	boardComment;
@@ -10,6 +11,13 @@ public class BoardVo {
 	private String	modifier;
 	private int totalCnt;
 	
+	
+	public String getBoardTypeName() {
+		return boardTypeName;
+	}
+	public void setBoardTypeName(String boardTypeName) {
+		this.boardTypeName = boardTypeName;
+	}
 	
 	public int getTotalCnt() {
 		return totalCnt;

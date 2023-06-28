@@ -171,7 +171,7 @@ public class BoardController {
 		return callbackMsg;
 	} // end of boardDeleteAction()
 	
-	@RequestMapping(value = "/board/boardSearchAction.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/board/boardSearchAction.do", method = RequestMethod.GET, produces = "application/text; charset=utf8")
 	@ResponseBody
 	public String boardSearchAction(Model model, @RequestParam(value = "boardType[]") List<String> boardType, PageVo pageVo) throws Exception {
 		System.out.println("----- boardSearchAction.do -----");
@@ -220,40 +220,6 @@ public class BoardController {
 		return callbackMsg;
 	} // end of boardSearchAction()
 	
-	/*
-	 * @RequestMapping(value = "/board/boardSearchList.do", method =
-	 * RequestMethod.GET) public String boardSearchList(Locale locale, Model
-	 * model,PageVo pageVo, @RequestParam(value = "boardTypeSet")String
-	 * boardTypeSet) throws Exception{
-	 * 
-	 * System.out.println("----- boardSearchList.do -----");
-	 * System.out.println("boardTypeSet : " + boardTypeSet);
-	 * 
-	 * String[] boardTypeArr = boardTypeSet.split(",");
-	 * 
-	 * for(String s : boardTypeArr) { System.out.println("boardTypeArr : " + s); }
-	 * 
-	 * Map<String, Object> boardTypeMap = new HashMap<String, Object>();
-	 * 
-	 * int page = 1; int totalCnt = 0;
-	 * 
-	 * if(pageVo.getPageNo() == 0){ pageVo.setPageNo(page); }
-	 * 
-	 * boardTypeMap.put("pageVo", pageVo); boardTypeMap.put("boardType",
-	 * boardTypeArr);
-	 * 
-	 * List<BoardVo> boardList = new ArrayList<BoardVo>();
-	 * 
-	 * boardList = boardService.boardSelectList(boardTypeMap);; //totalCnt =
-	 * boardVoList.size(); totalCnt = boardService.selectBoardCnt(boardTypeMap);
-	 * 
-	 * System.out.println("boardSelectCnt : " + totalCnt);
-	 * 
-	 * model.addAttribute("boardList", boardList); model.addAttribute("totalCnt",
-	 * totalCnt); model.addAttribute("pageNo", page);
-	 * 
-	 * return "board/boardList"; }
-	 */
 	
 } // end of class
 

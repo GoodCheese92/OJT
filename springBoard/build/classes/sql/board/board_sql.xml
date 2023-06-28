@@ -7,11 +7,13 @@
     	<result property="boardNum" 	column="BOARD_NUM"/>
     	<result property="boardTitle" 	column="BOARD_TITLE"/>
     	<result property="boardComment" column="BOARD_COMMENT"/>
+    	<result property="boardTypeName" column="CODE_NAME"/>
     </resultMap>
     
     <select id="boardList" parameterType="com.spring.board.vo.PageVo" resultMap="boardVo">
         SELECT 
 		  BOARD_TYPE
+          ,CODE_NAME
 		  ,BOARD_NUM
 		  ,BOARD_TITLE
 		  ,BOARD_COMMENT
@@ -19,14 +21,19 @@
 		FROM 
 		(
 		  SELECT
-		      	BOARD_TYPE
-				,BOARD_NUM
-				,BOARD_TITLE
-				,BOARD_COMMENT
-		      	,ROW_NUMBER() OVER(ORDER BY BOARD_NUM DESC) AS NUMROW
+		      	b.BOARD_TYPE
+                ,c.CODE_NAME
+				,b.BOARD_NUM
+				,b.BOARD_TITLE
+				,b.BOARD_COMMENT
+		      	,ROW_NUMBER() OVER(ORDER BY b.BOARD_NUM DESC) AS NUMROW
 		      	,COUNT(*) OVER() AS TOTAL_CNT
 			FROM
-				BOARD	
+				BOARD b
+            INNER JOIN
+                COM_CODE c
+            ON
+                b.BOARD_TYPE = c.CODE_ID	
 		)
 		WHERE NUMROW BETWEEN (#{pageNo}-1)*10 + 1 AND (#{pageNo})*10
     </select>
@@ -95,6 +102,7 @@
     <select id="searchList" parameterType="java.util.Map" resultMap="boardVo">
     	SELECT 
 		  BOARD_TYPE
+          ,CODE_NAME
 		  ,BOARD_NUM
 		  ,BOARD_TITLE
 		  ,BOARD_COMMENT
@@ -102,16 +110,21 @@
 		FROM 
 		(
 		  SELECT
-		      	BOARD_TYPE
-				,BOARD_NUM
-				,BOARD_TITLE
-				,BOARD_COMMENT
-		      	,ROW_NUMBER() OVER(ORDER BY BOARD_NUM DESC) AS NUMROW
+		      	b.BOARD_TYPE
+                ,c.CODE_NAME
+				,b.BOARD_NUM
+				,b.BOARD_TITLE
+				,b.BOARD_COMMENT
+		      	,ROW_NUMBER() OVER(ORDER BY b.BOARD_NUM DESC) AS NUMROW
 		      	,COUNT(*) OVER() AS TOTAL_CNT
 			FROM
-				BOARD
+				BOARD b
+            INNER JOIN
+                COM_CODE c
+            ON
+                b.BOARD_TYPE = c.CODE_ID
 			WHERE
-				BOARD_TYPE IN
+				b.BOARD_TYPE IN
 			<foreach collection="boardType" item="item" open="(" separator="," close=")">
 				#{item}
 			</foreach>	

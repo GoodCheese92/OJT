@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+    pageEncoding="UTF-8"%>
+    <!-- charset=EUC-KR -->
 <%@include file="/WEB-INF/views/common/common.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -10,7 +11,7 @@
 <script type="text/javascript">
 
 	$j(document).ready(function(){
-		// ÀüÃ¼ Ã¼Å©¹Ú½º Å¬¸¯
+		// ì „ì²´ ì²´í¬ë°•ìŠ¤ í´ë¦­
 		$j("#checkAll").click(function(){
 			if($j("#checkAll").prop("checked")){
 				$j(".check1").prop("checked", true);
@@ -19,7 +20,7 @@
 			}
 		});
 		
-		// ÇÏ³ªÀÇ Ã¼Å©¹Ú½º ÇØÁ¦ ½Ã ÀüÃ¼ Ã¼Å©¹Ú½º ÇØÁ¦
+		// í•˜ë‚˜ì˜ ì²´í¬ë°•ìŠ¤ í•´ì œ ì‹œ ì „ì²´ ì²´í¬ë°•ìŠ¤ í•´ì œ
 		$j(".check1").click(function(){
 			if($j("input[name='boardType']:checked").length == 4){
 				$j("#checkAll").prop("checked", true);
@@ -42,42 +43,83 @@
 				data : {boardType : boardTypeArray},
 				dataType : "json",
 				type : "get",
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 				success : function(data, textStatus, jqXHR){
 					var boardList = data.boardVoList;
 					
-					alert("Á¶È¸°á°ú");
+					// alert("ì¡°íšŒê²°ê³¼");
 					
-					alert("¸Ş¼¼Áö:"+data.success);
-					for(var i=0; i<boardList.length; i++){
+					// alert("ë©”ì„¸ì§€:"+data.success);
+					/* for(var i=0; i<boardList.length; i++){
 						console.log("boardVo : " + boardList[i].boardNum);
-					}
-					console.log("boardTypeSet : " + data.boardTypeSet);
+					} */
+					// console.log("boardTypeSet : " + data.boardTypeSet);
 					
-										
+					tableAlter(boardList);
+					totalCntAlter(boardList);
 					
 					// location.href = "/board/boardList.do?boardTypeSet=" + data.boardTypeSet;
 					
-					// alert("È®ÀÎ");
+					// alert("í™•ì¸");
 				},
 				error : function(jqXHR, textStatus, errorThrown){
-					alert("½ÇÆĞ");
+					alert("ì‹¤íŒ¨");
 				}
 			});
 		});
 		
+		function tableAlter(boardVoList){
+			var div = document.querySelector('#table1');
+			
+			var html = '<table id="boardTable" border = "1">';
+			html += '<tr>'
+			+ '<td width="80" align="center">'
+			+	'Type'
+			+ '</td>'
+			+ '<td width="40" align="center">'
+			+	'No'
+			+ '</td>'
+			+ '<td width="300" align="center">'
+			+	'Title'
+			+ '</td>'
+		    + '</tr>';
+		    for(var i = 0; i<boardVoList.length; i++){
+		    	html += '<tr>' + '<td align ="center">' + boardVoList[i].boardTypeName + '</td>';
+		    	html += '<td align="center">' + boardVoList[i].boardNum + '</td>';
+		    	html += '<td>' + '<a href = "/board/' + boardVoList[i].boardType + '/' + boardVoList[i].boardNum
+		    		+ '/boardView.do?pageNo=${pageNo}">' + boardVoList[i].boardTitle + '</a>';
+		    	html += '</td>' + '</tr>';
+		    }
+		    html += '</table>';
+		    div.innerHTML = html;
+		    console.log("html : " + html);
+		} // end of tableAlter()
+		
+		function totalCntAlter(boardVoList){
+			var tr = document.querySelector("#totalCnt");
+			
+			var html = '<td align="right">';
+			html += 'total : ' + boardVoList.length;
+			html += '</td>';
+			
+			tr.innerHTML = html;
+			console.log("Cnt html : " + html);
+		} // end of totalCntAlter()
 
 	}); // end of ready function
 
 </script>
 <body>
 <table  align="center">
-	<tr>
+	<tr id="totalCnt">
 		<td align="right">
 			total : ${totalCnt}
 		</td>
 	</tr>
+	
 	<tr>
 		<td>
+			<div id="table1">
 			<table id="boardTable" border = "1">
 				<tr>
 					<td width="80" align="center">
@@ -93,13 +135,7 @@
 				<c:forEach items="${boardList}" var="list">
 					<tr>
 						<td align="center">
-							<%-- <c:set var="boardType1" value="${list.boardType}"/> --%>
-							<c:choose>
-								<c:when test="${list.boardType eq 'a01'}">ÀÏ¹İ</c:when>
-								<c:when test="${list.boardType eq 'a02'}">Q&A</c:when>
-								<c:when test="${list.boardType eq 'a03'}">ÀÍ¸í</c:when>
-								<c:when test="${list.boardType eq 'a04'}">ÀÚÀ¯</c:when>
-							</c:choose>
+							${list.boardTypeName}
 						</td>
 						<td align="center">
 							${list.boardNum}
@@ -110,22 +146,23 @@
 					</tr>	
 				</c:forEach>
 			</table>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<td align="right">
-			<a href ="/board/boardWrite.do">±Û¾²±â</a>
+			<a href ="/board/boardWrite.do">ê¸€ì“°ê¸°</a>
 		</td>
 	</tr>
 	<tr>
 		<td align="left">
 		<form class="searchBoardType">
-			<input type="checkbox" class="check1" id="checkAll">ÀüÃ¼
-			<input type="checkbox" name="boardType" class="check1" value="a01">ÀÏ¹İ
+			<input type="checkbox" class="check1" id="checkAll">ì „ì²´
+			<input type="checkbox" name="boardType" class="check1" value="a01">ì¼ë°˜
 			<input type="checkbox" name="boardType" class="check1" value="a02">Q&amp;A
-			<input type="checkbox" name="boardType" class="check1" value="a03">ÀÍ¸í
-			<input type="checkbox" name="boardType" class="check1" value="a04">ÀÚÀ¯
-			<input type="button" id="search" value="Á¶È¸">
+			<input type="checkbox" name="boardType" class="check1" value="a03">ìµëª…
+			<input type="checkbox" name="boardType" class="check1" value="a04">ììœ 
+			<input type="button" id="search" value="ì¡°íšŒ">
 		</form>
 		</td>
 	</tr>
