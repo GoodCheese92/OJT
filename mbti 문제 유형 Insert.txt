@@ -1,0 +1,24 @@
+DECLARE
+	VN_BOARD_TYPE VARCHAR2(5) := 'EI';
+	VN_BOARD_TITLE VARCHAR2(50) := 'EI_title_'; 
+	VN_BOARD_COMMENT VARCHAR2(1000) := 'EI_comment_';
+BEGIN
+	FOR I IN 1..20
+	LOOP
+	INSERT INTO 
+        BOARD
+        (BOARD_TYPE
+	,BOARD_NUM
+        ,BOARD_TITLE
+        ,BOARD_COMMENT
+        )
+    VALUES
+        (VN_BOARD_TYPE
+        ,(SELECT NVL(TO_NUMBER(MAX(BOARD_NUM)+1), '1')
+	 	FROM BOARD
+	    WHERE BOARD_TYPE = VN_BOARD_TYPE)
+        ,VN_BOARD_TITLE || I
+        ,VN_BOARD_COMMENT || I 
+        );
+	END LOOP;
+END;
